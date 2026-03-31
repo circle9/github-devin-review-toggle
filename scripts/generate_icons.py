@@ -163,6 +163,14 @@ def draw_rounded_rect(
                     canvas.put(px, py, color)
 
 
+def _in_rounded_rect(
+    px: float, py: float, x: float, y: float, width: float, height: float, radius: float
+) -> bool:
+    dx = max(abs(px - (x + width / 2.0)) - (width / 2.0 - radius), 0.0)
+    dy = max(abs(py - (y + height / 2.0)) - (height / 2.0 - radius), 0.0)
+    return dx * dx + dy * dy <= radius * radius
+
+
 def draw_bubble_outline(
     canvas: Canvas,
     x: float,
@@ -173,17 +181,26 @@ def draw_bubble_outline(
     thickness: float,
     color: Color,
 ) -> None:
-    draw_rounded_rect(canvas, x, y, width, height, radius, color)
-    draw_rounded_rect(
-        canvas,
-        x + thickness,
-        y + thickness,
-        width - thickness * 2,
-        height - thickness * 2,
-        max(0.0, radius - thickness),
-        (0, 0, 0, 0),
-        overwrite=True,
-    )
+    inner_x = x + thickness
+    inner_y = y + thickness
+    inner_w = width - thickness * 2
+    inner_h = height - thickness * 2
+    inner_r = max(0.0, radius - thickness)
+
+    min_x = max(0, math.floor(x))
+    max_x = min(canvas.width - 1, math.ceil(x + width))
+    min_y = max(0, math.floor(y))
+    max_y = min(canvas.height - 1, math.ceil(y + height))
+
+    for py in range(min_y, max_y + 1):
+        for px in range(min_x, max_x + 1):
+            sx = px + 0.5
+            sy = py + 0.5
+            if _in_rounded_rect(sx, sy, x, y, width, height, radius) and not _in_rounded_rect(
+                sx, sy, inner_x, inner_y, inner_w, inner_h, inner_r
+            ):
+                canvas.put(px, py, color)
+
     tail = [
         (x + width * 0.38, y + height),
         (x + width * 0.53, y + height),
