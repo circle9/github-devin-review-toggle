@@ -14,7 +14,7 @@ Query strings and hashes are preserved when switching.
 1. Open `chrome://extensions`
 2. Enable Developer mode
 3. Click `Load unpacked`
-4. Select this folder: `/Users/shika358/Sources/devin-review-extention`
+4. Select this folder: `/path/to/devin-review-extention`
 
 ## Use
 
