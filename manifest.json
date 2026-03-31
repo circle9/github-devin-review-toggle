@@ -1,0 +1,19 @@
+{
+  "name": "GitHub Devin Review Toggle",
+  "description": "Toggle the current tab between a GitHub pull request and the matching Devin review page.",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "permissions": ["tabs"],
+  "host_permissions": ["https://github.com/*", "https://app.devin.ai/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Toggle GitHub / Devin review"
+  },
+  "commands": {
+    "toggle-review-target": {
+      "description": "Toggle between the GitHub pull request and Devin review for the current tab"
+    }
+  }
+}
