@@ -31,3 +31,11 @@ Run the automated URL parsing and conversion tests with:
 ```sh
 npm test
 ```
+
+## Assets
+
+Extension icons are generated from:
+
+```sh
+python3 scripts/generate_icons.py
+```
