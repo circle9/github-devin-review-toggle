@@ -79,15 +79,7 @@
   }
 
   function toggleReviewUrl(rawUrl) {
-    if (isGithubPullUrl(rawUrl)) {
-      return toDevinReviewUrl(rawUrl);
-    }
-
-    if (isDevinReviewUrl(rawUrl)) {
-      return toGithubPullUrl(rawUrl);
-    }
-
-    return null;
+    return toDevinReviewUrl(rawUrl) ?? toGithubPullUrl(rawUrl);
   }
 
   const urlToggle = {
