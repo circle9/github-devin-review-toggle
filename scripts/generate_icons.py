@@ -38,6 +38,11 @@ class Canvas:
         if 0 <= x < self.width and 0 <= y < self.height:
             self.pixels[y][x] = blend(self.pixels[y][x], color)
 
+    def set_pixel(self, x: int, y: int, color: Color) -> None:
+        """Set pixel directly without alpha blending."""
+        if 0 <= x < self.width and 0 <= y < self.height:
+            self.pixels[y][x] = color
+
     def write_png(self, path: Path) -> None:
         raw = bytearray()
         for row in self.pixels:
@@ -138,7 +143,7 @@ def draw_polygon(canvas: Canvas, points: list[tuple[float, float]], color: Color
 
 
 def draw_rounded_rect(
-    canvas: Canvas, x: float, y: float, width: float, height: float, radius: float, color: Color
+    canvas: Canvas, x: float, y: float, width: float, height: float, radius: float, color: Color, overwrite: bool = False
 ) -> None:
     min_x = max(0, math.floor(x))
     max_x = min(canvas.width - 1, math.ceil(x + width))
@@ -152,7 +157,10 @@ def draw_rounded_rect(
             dx = max(abs(sample_x - (x + width / 2.0)) - (width / 2.0 - radius), 0.0)
             dy = max(abs(sample_y - (y + height / 2.0)) - (height / 2.0 - radius), 0.0)
             if dx * dx + dy * dy <= radius * radius:
-                canvas.put(px, py, color)
+                if overwrite:
+                    canvas.set_pixel(px, py, color)
+                else:
+                    canvas.put(px, py, color)
 
 
 def draw_bubble_outline(
@@ -174,6 +182,7 @@ def draw_bubble_outline(
         height - thickness * 2,
         max(0.0, radius - thickness),
         (0, 0, 0, 0),
+        overwrite=True,
     )
     tail = [
         (x + width * 0.38, y + height),
